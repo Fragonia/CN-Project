@@ -1,0 +1,122 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+
+\geometry{margin=2cm}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Sprawozdanie z Projektu Docker-Compose}
+\author{Kornelia Dziugan}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Wstęp}
+
+W ramach projektu stworzyłam środowisko deweloperskie dla aplikacji opartej na frameworku Laravel, używając w tym celu oprogramowania Docker. W skład poniższego projektu wchodzi obraz php, serwer WWW, postgres oraz sam Composer.
+
+\texttt{W tym celu wymagane jest pobranie programu: DOCKER.}
+
+\section*{Instrukcja uruchomienia projektu dla przykładowego użytkownika:}
+
+Aby uruchomić projekt, wykonaj następujące kroki:
+
+\begin{enumerate}
+    \item Skopiuj projekt bazowy za pomocą komendy \texttt{git clone https://github.com/KarolZygadlo/CN-Project} do folderu.  
+    \item Edytuj plik docker-compose.yml, który znajduje się w ów folderze.
+    \item Uruchom polecenie \texttt{docker-compose up -d} w celu uruchomienia kontenerów w tle.
+    \item W wyszukiwarce internetowej uruchom stronę localhost.
+    \item Aby zatrzymać kontenery, użyj polecenia \texttt{docker-compose down}.
+    
+\end{enumerate}
+
+\section*{Opis pliku docker-compose.yml}
+
+Plik \texttt{docker-compose.yml} zawiera definicje usług dla projektu. Poniżej przedstawiamy krótki opis każdej usługi:
+
+Poniżej przedstawiamy skondensowany opis pliku \texttt{docker-compose.yml}:
+
+\begin{enumerate}
+    \item \textbf{nginx}:
+    \begin{itemize}
+        \item \texttt{image: nginx:latest}: Wykorzystuje najnowszy dostępny publicznie obraz NGINX.
+        \item \texttt{volumes}: Montuje lokalny katalog do katalogu HTML NGINX oraz niestandardowego pliku konfiguracyjnego.
+        \item \texttt{ports}: Przekierowuje port 80 z hosta na port 80 w kontenerze NGINX.
+        \item \texttt{networks}: Dodaje usługę do zdefiniowanej sieci o nazwie \texttt{app-net}.
+    \end{itemize}
+
+    \item \textbf{php}:
+    \begin{itemize}
+        \item \texttt{build}: Buduje obraz PHP na podstawie lokalnego pliku Dockerfile.
+        \item \texttt{volumes}: Montuje aktualny katalog do katalogu HTML PHP.
+        \item \texttt{networks}: Dodaje usługę do zdefiniowanej sieci o nazwie \texttt{app-net}.
+    \end{itemize}
+
+    \item \textbf{postgres}:
+    \begin{itemize}
+        \item \texttt{image: postgres:14-alpine}: Używa obrazu PostgreSQL w wersji 14 z systemem Alpine Linux.
+        \item \texttt{ports}: Przekierowuje port 5432 z hosta na port 5432 w kontenerze PostgreSQL.
+        \item \texttt{volumes}: Montuje wolumin do katalogu danych PostgreSQL.
+        \item \texttt{env\_file}: Wskazuje na plik zawierający zmienne środowiskowe do konfiguracji PostgreSQL.
+        \item \texttt{networks}: Dodaje usługę do zdefiniowanej sieci o nazwie \texttt{app-net}.
+    \end{itemize}
+\end{enumerate}
+
+Wszystkie usługi są dodane do sieci \texttt{app-net}, co umożliwia im komunikację między sobą. Użyto oficjalnych obrazów, a konfiguracja jest dostosowana do projektu.
+
+
+\section*{Opis usług}
+
+\begin{itemize}
+    \item \textbf{nginx}: Usługa zawierająca obraz NGINX. Udostępnia port 80, mapuje katalog bieżący do katalogu HTML NGINX i konfiguruje niestandardowy plik konfiguracyjny.
+    
+    \item \textbf{php}: Usługa zbudowana z lokalnego pliku Dockerfile. Mapuje katalog bieżący do katalogu HTML PHP.
+    
+    \item \textbf{postgres}: Usługa z obrazem PostgreSQL w wersji 14. Mapuje port 5432 i korzysta z pliku \texttt{.env.database} do konfiguracji.
+\end{itemize}
+
+\section*{Sieć i Woluminy}
+
+\begin{itemize}
+    \item \textbf{networks}: Definicja sieci \texttt{app-net} z użyciem drivera \texttt{bridge}.
+    
+    \item \textbf{volumes}: Definicja woluminu \texttt{db\_data}.
+\end{itemize}
+
+\section*{Podsumowanie}
+
+Podczas pracy nad projektem udało się skonfigurować środowisko deweloperskie, posługując się instrukcjami z różnorakich stron internetowych oraz filmików. Największe problemy były z samym Dockerem, który nie jest odpowiednio zoptymalizowany na systemy Windows. Występowały problemy z otwarciem Firefoxa podczas korzystania z programu. 
+
+\end{document}
